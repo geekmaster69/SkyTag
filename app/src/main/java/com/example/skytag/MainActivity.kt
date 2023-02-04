@@ -7,10 +7,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
+import androidx.work.*
 import com.example.skytag.databinding.ActivityMainBinding
 import com.example.skytag.model.LocationEvent
+import com.example.skytag.worker.GetLocationWorker
+import com.example.skytag.worker.UpdateLocationWorker
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -47,10 +51,6 @@ class MainActivity : AppCompatActivity() {
         binding.btnStop.setOnClickListener {
             stopService(service)
         }
-
-
-
-
     }
 
     override fun onStart() {
@@ -72,8 +72,24 @@ class MainActivity : AppCompatActivity() {
                     android.Manifest.permission.ACCESS_COARSE_LOCATION))
         }else{
             startService(service)
+            myPeriodicWork()
 
         }
+    }
+    private fun myPeriodicWork() {
+        val constraints = Constraints.Builder()
+            .build()
+
+        val myWorkRequest = PeriodicWorkRequest.Builder(
+            UpdateLocationWorker::class.java,
+            15,
+            TimeUnit.MINUTES
+        ).setConstraints(constraints)
+            .addTag("my_id")
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("my_id", ExistingPeriodicWorkPolicy.KEEP, myWorkRequest)
+
     }
 
     override fun onDestroy() {

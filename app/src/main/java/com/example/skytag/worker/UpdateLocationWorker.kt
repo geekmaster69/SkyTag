@@ -1,38 +1,58 @@
 package com.example.skytag.worker
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.skytag.model.LocationEvent
+import com.example.skytag.base.database.UserInfoApplication
+import com.example.skytag.model.UserInfo
 import com.example.skytag.network.UserService
-import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
+import com.example.skytag.presentation.location.data.database.dao.entities.UserInfoEntity
+import kotlinx.coroutines.delay
+import java.text.SimpleDateFormat
+import java.util.*
+
+private lateinit var dateFormat: SimpleDateFormat
 
 class UpdateLocationWorker(ctx: Context, params: WorkerParameters): CoroutineWorker(ctx, params) {
+    val userService = UserService()
     override suspend fun doWork(): Result {
-        uploadLocation()
+        makeStatusNotification("update location", applicationContext)
 
+        delay(20000)
+        uploadLocation()
 
         return Result.success()
 
     }
 
-    private fun uploadLocation() {
+    private suspend fun uploadLocation() {
+        dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
-        if (!EventBus.getDefault().isRegistered(this)){
-            EventBus.getDefault().register(this)
+        val mensaje = "reporte"
+        val usuario = "tagkeyuser"
+        val telefono = "5611750632"
+        val tagKey = "FF:FF:40:01:2F:3F"
+        val codigo = "1"
+        val datail = "reporte de tag"
+        val date = Date()
+        val fecha = dateFormat.format(date)
+        val latitud = 23.232323
+        val longitud = 43.43434334
+        val location = UserInfoApplication.database.userInfoDao().getAllData()
 
 
-            @Subscribe
-            fun receiverLocationEvent(locationEvent: LocationEvent){
-                binding.tvLatitud.text = "Latitud: ${locationEvent.latitude}"
-                binding.tvLongitude.text = "Longitud: ${locationEvent.longitude}"
-            }
+       val response =  userService.updateUserInfo(UserInfo(
+            mensaje = mensaje,
+            fecha = fecha,
+            usuario = usuario,
+            telefono = telefono,
+            tagkey = tagKey,
+            codigo = codigo, detail = datail, longitud = location.longitud, latitud = location.latitud))
 
-        val userService: UserService
+        UserInfoApplication.database.userInfoDao().deleteUserInfo()
 
-        userService.updateUserInfo()
-
+        Log.w("Reponse", response.toString() )
 
     }
 }

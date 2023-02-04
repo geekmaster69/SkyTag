@@ -9,7 +9,9 @@ import android.content.Intent
 import android.location.Location
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import com.example.skytag.base.database.UserInfoApplication
 import com.example.skytag.model.LocationEvent
+import com.example.skytag.presentation.location.data.database.dao.entities.UserInfoEntity
 import com.google.android.gms.location.*
 import org.greenrobot.eventbus.EventBus
 
@@ -34,7 +36,8 @@ class LocationService : Service() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         locationRequest =
             LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY,1000)
-                .setIntervalMillis(15*60*1000).build()
+                .setIntervalMillis(10*60*1000).build()
+
 
         locationCallback = object : LocationCallback(){
             override fun onLocationAvailability(p0: LocationAvailability) {
@@ -44,6 +47,9 @@ class LocationService : Service() {
             override fun onLocationResult(locationResult: LocationResult) {
                 super.onLocationResult(locationResult)
                 onNewLocation(locationResult)
+                Thread{
+                    UserInfoApplication.database.userInfoDao().addUserINfo(UserInfoEntity(latitud = location!!.latitude, longitud = location!!.longitude))
+                }.start()
 
             }
         }
@@ -77,9 +83,7 @@ class LocationService : Service() {
         EventBus.getDefault().post(
             LocationEvent(
             latitude = location?.latitude,
-            longitude = location?.longitude
-        )
-        )
+            longitude = location?.longitude))
         startForeground(NOTIFICATION_ID, getNotification())
     }
     private fun getNotification(): Notification{
@@ -104,6 +108,6 @@ class LocationService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        removeLocationUpdates()
+      //  removeLocationUpdates()
     }
 }

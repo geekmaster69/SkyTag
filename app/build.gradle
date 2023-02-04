@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -62,5 +63,10 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:2.7.1"
     //EventBus
     implementation("org.greenrobot:eventbus:3.3.1")
+    //Room
+    implementation "androidx.room:room-runtime:2.5.0"
+    kapt "androidx.room:room-compiler:2.5.0"
+    //Coroutines
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 
 }
