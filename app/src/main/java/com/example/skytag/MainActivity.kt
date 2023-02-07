@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.work.*
 import com.example.skytag.databinding.ActivityMainBinding
 import com.example.skytag.model.LocationEvent
+import com.example.skytag.service.LocationService
 import com.example.skytag.worker.GetLocationWorker
 import com.example.skytag.worker.UpdateLocationWorker
 import org.greenrobot.eventbus.EventBus
@@ -42,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        service = Intent(this, LocationService::class.java)
+    //    service = Intent(this, LocationService::class.java)
 
         binding.btnStar.setOnClickListener {
             checkPermissions()
@@ -71,7 +72,10 @@ class MainActivity : AppCompatActivity() {
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION))
         }else{
-            startService(service)
+            Intent(applicationContext, LocationService::class.java).apply {
+                action = LocationService.ACTION_STAR
+                startService(this)
+            }
             myPeriodicWork()
 
         }
