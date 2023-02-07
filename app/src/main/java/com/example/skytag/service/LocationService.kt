@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.skytag.R
 import com.example.skytag.base.database.UserInfoApplication
@@ -49,21 +50,19 @@ class LocationService : Service() {
                         .addUserINfo(UserInfoEntity(
                             latitud = location.latitude, longitud = location.longitude))
 
-
+                Log.w("Locatin", "${location.latitude} ${location.longitude}")
             }
             .launchIn(serviceScope)
     }
     private fun stop(){
         stopForeground(true)
         stopSelf()
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         serviceScope.cancel()
     }
-
 
     companion object{
         const val ACTION_STAR = "ACTION_START"

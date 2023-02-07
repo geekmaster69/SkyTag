@@ -19,7 +19,7 @@ class UpdateLocationWorker(ctx: Context, params: WorkerParameters): CoroutineWor
     override suspend fun doWork(): Result {
         makeStatusNotification("update location", applicationContext)
 
-        delay(10000)
+        delay(20000)
         uploadLocation()
 
         return Result.success()

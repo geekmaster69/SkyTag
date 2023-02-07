@@ -10,7 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.work.*
 import com.example.skytag.databinding.ActivityMainBinding
 import com.example.skytag.model.LocationEvent
-import com.example.skytag.service.LocationService
+import com.example.skytag.worker.LocationWorker
 import com.example.skytag.worker.UpdateLocationWorker
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -71,10 +71,11 @@ class MainActivity : AppCompatActivity() {
                     android.Manifest.permission.ACCESS_FINE_LOCATION,
                     android.Manifest.permission.ACCESS_COARSE_LOCATION))
         }else{
-            Intent(applicationContext, LocationService::class.java).apply {
-                action = LocationService.ACTION_STAR
-                startService(this)
-            }
+//            Intent(applicationContext, LocationService::class.java).apply {
+//                action = LocationService.ACTION_STAR
+//                startService(this)
+//            }
+            oneTimeWork()
             myPeriodicWork()
 
         }
@@ -83,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         val constraints = Constraints.Builder()
             .build()
 
-        val myWorkRequest = PeriodicWorkRequest.Builder(
+        val updateLocationWork = PeriodicWorkRequest.Builder(
             UpdateLocationWorker::class.java,
             15,
             TimeUnit.MINUTES
@@ -91,8 +92,25 @@ class MainActivity : AppCompatActivity() {
             .addTag("my_id")
             .build()
 
-        WorkManager.getInstance(this).enqueueUniquePeriodicWork("my_id", ExistingPeriodicWorkPolicy.KEEP, myWorkRequest)
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("my_id", ExistingPeriodicWorkPolicy.REPLACE, updateLocationWork)
 
+
+
+    }
+    fun oneTimeWork(){
+
+        val constraints = Constraints.Builder()
+            .build()
+
+        val getLocationWorker = PeriodicWorkRequest.Builder(
+            LocationWorker::class.java,
+            15,
+            TimeUnit.MINUTES
+        ).setConstraints(constraints)
+            .addTag("my_id")
+            .build()
+
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork("my_idd", ExistingPeriodicWorkPolicy.KEEP, getLocationWorker)
     }
 
     override fun onDestroy() {

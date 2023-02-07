@@ -9,7 +9,7 @@ interface UserInfoDao {
     @Query("SELECT * FROM user_info_entity")
     fun getAllData() :UserInfoEntity
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addUserINfo(userInfoEntity: UserInfoEntity)
 
     @Update
