@@ -41,29 +41,17 @@ class LocationService : Service() {
     }
 
     private fun start(){
-        val notification = NotificationCompat.Builder(this, "location")
-            .setContentTitle("Ubicaion")
-            .setContentText("Buscando")
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-
-
-        startForeground(1, notification.build())
-
-
-
         locationClient.getLocationClient(10000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
-                Thread{
+
                     UserInfoApplication.database.userInfoDao()
                         .addUserINfo(UserInfoEntity(
                             latitud = location.latitude, longitud = location.longitude))
-                }.start()
+
 
             }
             .launchIn(serviceScope)
-
-
     }
     private fun stop(){
         stopForeground(true)

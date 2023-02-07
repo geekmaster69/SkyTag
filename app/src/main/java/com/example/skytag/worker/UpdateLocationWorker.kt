@@ -15,11 +15,11 @@ import java.util.*
 private lateinit var dateFormat: SimpleDateFormat
 
 class UpdateLocationWorker(ctx: Context, params: WorkerParameters): CoroutineWorker(ctx, params) {
-    val userService = UserService()
+    private val userService = UserService()
     override suspend fun doWork(): Result {
         makeStatusNotification("update location", applicationContext)
 
-        delay(20000)
+        delay(10000)
         uploadLocation()
 
         return Result.success()
@@ -37,8 +37,7 @@ class UpdateLocationWorker(ctx: Context, params: WorkerParameters): CoroutineWor
         val datail = "reporte de tag"
         val date = Date()
         val fecha = dateFormat.format(date)
-        val latitud = 23.232323
-        val longitud = 43.43434334
+
         val location = UserInfoApplication.database.userInfoDao().getAllData()
 
 

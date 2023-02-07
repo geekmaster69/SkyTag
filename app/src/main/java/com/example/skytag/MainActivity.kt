@@ -11,7 +11,6 @@ import androidx.work.*
 import com.example.skytag.databinding.ActivityMainBinding
 import com.example.skytag.model.LocationEvent
 import com.example.skytag.service.LocationService
-import com.example.skytag.worker.GetLocationWorker
 import com.example.skytag.worker.UpdateLocationWorker
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
