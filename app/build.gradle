@@ -48,6 +48,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
+    //Liberia de Bluetooth BLE
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"
     //GPS
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     //Retrofit

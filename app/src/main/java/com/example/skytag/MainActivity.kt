@@ -9,11 +9,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.work.*
 import com.example.skytag.databinding.ActivityMainBinding
-import com.example.skytag.model.LocationEvent
 import com.example.skytag.worker.LocationWorker
 import com.example.skytag.worker.UpdateLocationWorker
 import org.greenrobot.eventbus.EventBus
-import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -51,6 +49,10 @@ class MainActivity : AppCompatActivity() {
         binding.btnStop.setOnClickListener {
             stopService(service)
         }
+
+        binding.btnAddDevice.setOnClickListener{
+
+        }
     }
 
     override fun onStart() {
@@ -75,12 +77,12 @@ class MainActivity : AppCompatActivity() {
 //                action = LocationService.ACTION_STAR
 //                startService(this)
 //            }
-            oneTimeWork()
-            myPeriodicWork()
+            getLocation()
+            updateLocation()
 
         }
     }
-    private fun myPeriodicWork() {
+    private fun updateLocation() {
         val constraints = Constraints.Builder()
             .build()
 
@@ -97,7 +99,7 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    fun oneTimeWork(){
+    private fun getLocation(){
 
         val constraints = Constraints.Builder()
             .build()
@@ -120,10 +122,6 @@ class MainActivity : AppCompatActivity() {
             EventBus.getDefault().unregister(this)
         }
     }
-    @Subscribe
-    fun receiverLocationEvent(locationEvent: LocationEvent){
-        binding.tvLatitud.text = "Latitud: ${locationEvent.latitude}"
-        binding.tvLongitude.text = "Longitud: ${locationEvent.longitude}"
-    }
+
 }
 

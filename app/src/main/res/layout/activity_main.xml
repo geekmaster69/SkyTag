@@ -8,22 +8,14 @@
     android:padding="16dp"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/tvLatitud"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/btnAddDevice"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Latitud"/>
-    <TextView
-        android:id="@+id/tvLongitude"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLatitud"
-        android:text="Longitud"/>
+        android:src="@drawable/ic_add"
+        android:contentDescription= "@string/add_bt_device" />
 
     <Button
         android:id="@+id/btnStar"
